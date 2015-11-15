@@ -6,7 +6,7 @@ data Solution =
    | TwoSoulutions Double Double
    | NoSolutions deriving (Show)
 
-promptDouble :: String -> IO Double
+promptDouble :: Read a => String -> IO a
 promptDouble text = do
     putStr text
     hFlush stdout
@@ -21,9 +21,9 @@ sqrtEquation a b c
     | d == 0.0 = OneSolution x1
     | d > 0.0 = TwoSoulutions x1 x2
     where d = b*b - 4*a*c
-          x1 = f a b d (+)
-          x2 = f a b d (-)
-          f a b d operator = operator (-b) (sqrt d)/2*a
+          x1 = f (+)
+          x2 = f (-)
+          f operator = operator (-b) (sqrt d)/2*a
 
 main :: IO ()
 main = do
