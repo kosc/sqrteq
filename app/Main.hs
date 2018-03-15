@@ -1,5 +1,6 @@
-import           System.IO (hFlush, stdout)
-import           Text.Read (readMaybe)
+import           Data.Function (fix)
+import           System.IO     (hFlush, stdout)
+import           Text.Read     (readEither)
 
 data Solution a
     = NoSolutions
@@ -7,15 +8,22 @@ data Solution a
     | TwoSolutions a a
     deriving (Show)
 
-prompt :: Read a => String -> IO a
+flush :: IO ()
+flush = hFlush stdout
+
+prompt :: String -> IO String
 prompt text = do
     putStr text
-    hFlush stdout
-    readMaybe <$> getLine >>= \case
-        Just x  -> pure x
-        Nothing -> do
-            putStrLn "Invalid number entered"
-            prompt text
+    flush
+    getLine
+
+parsePrompt :: Read a => String -> IO a
+parsePrompt text = fix $ \repeat -> do
+    readEither <$> prompt text >>= \case
+        Right value -> pure value
+        Left  error -> do
+            putStrLn error
+            repeat
 
 solveEquation :: (Floating a, Ord a) => a -> a -> a -> Solution a
 solveEquation a b c
@@ -32,7 +40,7 @@ solveEquation a b c
 
 main :: IO ()
 main = do
-    a <- prompt "Input a: "
-    b <- prompt "Input b: "
-    c <- prompt "Input c: "
+    a <- parsePrompt "Input a: "
+    b <- parsePrompt "Input b: "
+    c <- parsePrompt "Input c: "
     print $ solveEquation a b c
