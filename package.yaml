@@ -14,4 +14,5 @@ dependencies:
 
 executables:
   sqrteq:
-    main: Main.hs
+    source-dirs:  app
+    main:         Main.hs
