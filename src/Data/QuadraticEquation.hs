@@ -24,15 +24,12 @@ discriminant :: Floating a => QuadraticEquation a -> a
 discriminant (QuadraticEquation a b c) = (b * b) - (4 * a * c)
 
 solve :: (Floating a, Ord a) => QuadraticEquation a -> Solution a
-solve    (QuadraticEquation 0 b c) = OneSolution (-c / b)
-solve eq@(QuadraticEquation a b c) = case compare discriminant' 0 of
+solve (QuadraticEquation 0 b c) = OneSolution (-c / b)
+solve (QuadraticEquation a b c) = case compare discriminant' 0 of
     LT -> NoSolutions
-    EQ -> OneSolution x1
-    GT -> TwoSolutions x1 x2
+    EQ -> OneSolution center
+    GT -> TwoSolutions (center + offset) (center - offset)
   where
-    discriminant' = discriminant eq
+    discriminant' = discriminant (QuadraticEquation a b c)
     center        = -b / (2 * a)
     offset        = sqrt discriminant' / (2 * a)
-    x1            = center + offset
-    x2            = center - offset
-    alone         = -c / b

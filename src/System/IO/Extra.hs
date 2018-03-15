@@ -21,7 +21,7 @@ prompt text = do
     getLine
 
 parsePrompt :: Read a => String -> IO a
-parsePrompt text = fix $ \repeat -> do
+parsePrompt text = fix $ \repeat ->
     readEither <$> prompt text >>= \case
         Right value -> pure value
         Left  error -> do
