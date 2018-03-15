@@ -1,0 +1,38 @@
+name:               sqrteq
+version:            0.1.0.0
+synopsis:           Program for solving quadratic equations
+license:            GPL-3
+license-file:       LICENSE
+author:             Artyom Kosenko
+maintainer:         hotkosc@gmail.com
+category:           Math
+extra-source-files:
+  - README.md
+
+dependencies:
+  - base >= 4.8 && < 5
+
+default-extensions:
+  - LambdaCase
+
+library:
+  source-dirs: src
+
+executables:
+  sqrteq:
+    source-dirs:  app
+    main:         Main.hs
+    dependencies:
+      - sqrteq
+
+tests:
+  sqrteq-test:
+    main:         Spec.hs
+    source-dirs:  test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - sqrteq
+      - hspec
