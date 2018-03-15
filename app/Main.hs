@@ -1,42 +1,29 @@
-import           Data.Function (fix)
-import           System.IO     (hFlush, stdout)
-import           Text.Read     (readEither)
+import           Data.Monoid     ((<>))
+import           System.IO.Extra (parsePrompt)
 
 data Solution a
     = NoSolutions
     | OneSolution a
     | TwoSolutions a a
-    deriving (Show)
 
-flush :: IO ()
-flush = hFlush stdout
-
-prompt :: String -> IO String
-prompt text = do
-    putStr text
-    flush
-    getLine
-
-parsePrompt :: Read a => String -> IO a
-parsePrompt text = fix $ \repeat -> do
-    readEither <$> prompt text >>= \case
-        Right value -> pure value
-        Left  error -> do
-            putStrLn error
-            repeat
+instance Show a => Show (Solution a) where
+    show NoSolutions          = "There are no solutions"
+    show (OneSolution x)      = "There is only one solution: " <> show x
+    show (TwoSolutions x1 x2) = "Solutions: " <> show x1 <> ", " <> show 2
 
 solveEquation :: (Floating a, Ord a) => a -> a -> a -> Solution a
-solveEquation a b c
-    | a == 0.0 = OneSolution alone
-    | d <  0.0 = NoSolutions
-    | d == 0.0 = OneSolution x1
-    | d > 0.0  = TwoSolutions x1 x2
+solveEquation 0 b c = OneSolution (-c / b)
+solveEquation a b c = case compare discriminant 0 of
+    LT -> NoSolutions
+    EQ -> OneSolution x1
+    GT -> TwoSolutions x1 x2
   where
-    d     = b*b - 4*a*c
-    x1    = f (+)
-    x2    = f (-)
-    alone = -c / b
-    f op  = -b `op` sqrt d / (2*a)
+    discriminant = (b * b) - (4 * a * c)
+    center       = -b / (2 * a)
+    offset       = sqrt discriminant / (2 * a)
+    x1           = center + offset
+    x2           = center - offset
+    alone        = -c / b
 
 main :: IO ()
 main = do

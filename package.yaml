@@ -15,7 +15,12 @@ dependencies:
 default-extensions:
   - LambdaCase
 
+library:
+  source-dirs: src
+
 executables:
   sqrteq:
     source-dirs:  app
     main:         Main.hs
+    dependencies:
+      - sqrteq
