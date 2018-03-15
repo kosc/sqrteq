@@ -13,6 +13,7 @@ data Solution a
     = NoSolutions
     | OneSolution a
     | TwoSolutions a a
+    deriving (Eq)
 
 instance Show a => Show (Solution a) where
     show  NoSolutions         = "There are no solutions"
