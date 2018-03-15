@@ -12,6 +12,9 @@ extra-source-files:
 dependencies:
   - base >= 4.8 && < 5
 
+default-extensions:
+  - LambdaCase
+
 executables:
   sqrteq:
     source-dirs:  app
